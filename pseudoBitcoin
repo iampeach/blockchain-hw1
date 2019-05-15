@@ -1,0 +1,53 @@
+#/bin/sh
+
+usage() {
+	echo
+	echo "Usage: $0"
+	echo
+	echo "  -h, --help				Display usage instructions"
+	echo "  printchain				Print the whole blockchain"
+	echo "  printblock [ -height int ]		Print the specific block with the height"
+	echo "  addblock [ -transaction string ]	Add a new block with the transaction"
+	echo
+}
+
+print_err() {
+	echo $@ 1>&2;
+}
+
+# Main Function
+if [[ -z $1 ]]; then
+	print_err "Error: Expected argument to be present"
+	usage
+else
+	case $1 in
+		-h|--help)
+			usage
+			;;
+		printchain)
+			python3 cli.py --printchain
+			;;
+		printblock)
+			if [[ -z $2 ]]; then
+				python3 cli.py printblock
+			elif [ -height = $2 ]; then
+				python3 cli.py printblock --height $3
+			else
+				usage
+			fi
+			;;
+		addblock)
+			if [[ -z $2 ]]; then
+				python3 cli.py addblock
+			elif [ -transaction = $2 ]; then
+				python3 cli.py addblock --transaction $3
+			else
+				usage
+			fi
+			;;
+		*)
+			print_err "Unknown argument: $1"
+			usage
+			;;
+	esac
+fi
